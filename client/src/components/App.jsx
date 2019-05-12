@@ -2,6 +2,7 @@ import React from 'react';
 import MovieCard from './MovieCard.jsx';
 import SearchBar from './SearchBar.jsx';
 import AddMovieBar from './AddMovieBar.jsx';
+import movieSearch from '../moviedb/moviedb';
 
 class App extends React.Component {
   constructor(props) {
@@ -36,17 +37,19 @@ class App extends React.Component {
     }
   }
 
-  onAdd = (title) => {
-    this.setState({ filtered: [...this.state.filtered, title.toLowerCase()],
-                    movies: [...this.state.movies, { title }],
-                    toWatch: [...this.state.toWatch, title.toLowerCase()]
-                  });
+  onAdd = (query) => {
+    movieSearch(query, movie => {
+      console.log(movie);
+      this.setState({ filtered: [...this.state.filtered, movie.title.toLowerCase()],
+                      movies: [...this.state.movies, movie],
+                      toWatch: [...this.state.toWatch, movie.title.toLowerCase()]
+                    });
+    });
   } 
 
   onSearch = (query) => {
     const filtered = [];
     query = query.toLowerCase();
-
     this.state.movies.forEach(movie => {
       const title = movie.title.toLowerCase()
       if (title.includes(query)) filtered.push(title);
